@@ -2,9 +2,9 @@
 pragma solidity 0.8.17;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import {IERC677Receiver} from "@src/interfaces/IERC677Receiver.sol";
+import {IERC677Receiver} from "./interfaces/IERC677Receiver.sol";
 
-contract ERC677Mock is ERC20 {
+contract FeedBackToken is ERC20 {
     constructor(string memory _tokenName, string memory _tokenSymbol, uint256 _totalSupply)
         ERC20(_tokenName, _tokenSymbol)
     {
