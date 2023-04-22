@@ -5,10 +5,26 @@ import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {IERC677Receiver} from "./interfaces/IERC677Receiver.sol";
 
 contract FeedBackToken is ERC20 {
-    constructor(string memory _tokenName, string memory _tokenSymbol, uint256 _totalSupply)
+    address protocolAdmin;
+
+    constructor(string memory _tokenName, string memory _tokenSymbol, uint256 _totalSupply, address _admin)
         ERC20(_tokenName, _tokenSymbol)
     {
-        _mint(msg.sender, _totalSupply * (10 ** uint256(decimals())));
+        _mint(address(this), _totalSupply);
+        protocolAdmin = _admin;
+    }
+
+    modifier onlyProtocol() {
+        require(msg.sender == protocolAdmin, "Only admin can call this function");
+        _;
+    }
+
+    function send(address _to, uint256 _value) external onlyProtocol returns (bool) {
+        return transfer(_to, _value);
+    }
+
+    function updateAdmin(address _newAdmin) external onlyProtocol {
+        protocolAdmin = _newAdmin;
     }
 
     function transferAndCall(address _to, uint256 _value, bytes memory _data) public returns (bool) {
