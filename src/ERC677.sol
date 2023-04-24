@@ -19,8 +19,8 @@ contract FeedBackToken is ERC20 {
         _;
     }
 
-    function send(address _to, uint256 _value) external onlyProtocol returns (bool) {
-        return transfer(_to, _value);
+    function send(address _to, uint256 _value) external onlyProtocol {
+        _transfer(address(this), _to, _value);
     }
 
     function updateAdmin(address _newAdmin) external onlyProtocol {
