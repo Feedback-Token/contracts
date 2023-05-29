@@ -1,7 +1,7 @@
 -include .env
 
 init-install:
-	forge install Openzeppelin/openzeppelin-contracts foundry-rs/forge-std smartcontractkit/chainlink
+	forge install Openzeppelin/openzeppelin-contracts foundry-rs/forge-std smartcontractkit/chainlink smartcontractkit/chainlink
 
 install:
 	forge install
