@@ -5,7 +5,7 @@ import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {IERC677Receiver} from "./interfaces/IERC677Receiver.sol";
 
 contract FeedBackToken is ERC20 {
-    address protocolAdmin;
+    address public protocolAdmin;
 
     constructor(string memory _tokenName, string memory _tokenSymbol, uint256 _totalSupply, address _admin)
         ERC20(_tokenName, _tokenSymbol)
