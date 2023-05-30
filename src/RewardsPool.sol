@@ -10,7 +10,6 @@ import {IEscrowToken} from "./interfaces/IEscrowToken.sol";
 contract RewardsPool is IRewardsPool, Ownable {
     using SafeERC20 for IERC20;
 
-    uint256 private constant BASIS_POINTS_TOTAL = 10000;
     uint256 public totalRewards;
     IEscrowToken internal veToken;
     address public rewardsToken;
@@ -52,9 +51,20 @@ contract RewardsPool is IRewardsPool, Ownable {
     }
 
     function unlockTokens(uint256 _amount) external {
+        require(
+            block.timestamp >= locks[msg.sender].lockTimestamp + locks[msg.sender].lockDuration,
+            "Lock period has not expired"
+        );
         require(veToken.balanceOf(msg.sender) >= _amount, "Insufficient veFBT balance");
         veToken.burn(msg.sender, _amount);
-        IERC20(rewardsToken).safeTransfer(msg.sender, _amount);
+        uint256 _total = _calculateRewardAmount(msg.sender, _amount);
+        lastTotalRewards[msg.sender] = totalRewards;
+        IERC20(rewardsToken).safeTransfer(msg.sender, _total);
+
+        locks[msg.sender].amount -= _amount;
+        if (locks[msg.sender].amount == 0) {
+            delete locks[msg.sender];
+        }
     }
 
     function claimRewards() external {
@@ -92,5 +102,11 @@ contract RewardsPool is IRewardsPool, Ownable {
 
     function _updateRewards(uint256 _rewards) internal {
         totalRewards += _rewards;
+    }
+
+    function _calculateRewardAmount(address _user, uint256 _amount) internal view returns (uint256) {
+        uint256 newRewards = totalRewards - lastTotalRewards[_user];
+
+        return (_amount * newRewards) / IERC20(address(veToken)).totalSupply();
     }
 }

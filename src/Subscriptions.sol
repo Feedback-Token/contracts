@@ -21,20 +21,23 @@ contract FBTSubscriptions is AutomationCompatibleInterface, Ownable {
     uint256 internal interval;
     uint256 internal lastDistribution;
 
-    constructor(address _protocolToken, uint256 _protocolFee, address _protocolAdmin, address _rewardsPool) {
+    constructor(
+        address _protocolToken,
+        uint256 _protocolFee,
+        address _protocolAdmin,
+        address _rewardsPool,
+        uint256 _interval
+    ) {
         protocolToken = _protocolToken;
         protocolFee = _protocolFee;
         protocolAdmin = _protocolAdmin;
         rewardsPool = IRewardsPool(_rewardsPool);
+        interval = _interval;
     }
 
     modifier onlyProtocol() {
         require(msg.sender == protocolAdmin, "Only admin can call this function");
         _;
-    }
-
-    function _fundSubscription(address sender, uint256 value) internal {
-        balances[sender] += value;
     }
 
     function useSubscription(address sender) external onlyProtocol {
@@ -91,5 +94,9 @@ contract FBTSubscriptions is AutomationCompatibleInterface, Ownable {
         require(balance > 0, "Insufficient balance");
         balances[address(this)] -= balance;
         IERC20(protocolToken).safeTransfer(_to, balance);
+    }
+
+    function _fundSubscription(address sender, uint256 value) internal {
+        balances[sender] += value;
     }
 }
