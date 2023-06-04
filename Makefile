@@ -11,3 +11,6 @@ deploy-token:
 
 deploy-subscription:
 	forge script script/Subscriptions.s.sol:SubscriptionsScript --rpc-url ${RPC_URL} --etherscan-api-key ${EXPLORER_KEY} --broadcast -vvvv --ffi --verify
+
+deploy-rewards-pool:
+	forge script script/RewardsPool.s.sol:RewardsPoolScript --rpc-url ${RPC_URL} --etherscan-api-key ${EXPLORER_KEY} --broadcast -vvvv --ffi --verify

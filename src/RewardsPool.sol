@@ -82,6 +82,19 @@ contract RewardsPool is IRewardsPool, Ownable {
         IERC20(rewardsToken).safeTransfer(msg.sender, reward);
     }
 
+    function getAvailableRewards(address _user) external view returns (uint256) {
+        uint256 _userBalance = IERC20(address(veToken)).balanceOf(_user);
+
+        if (_userBalance == 0) {
+            return 0;
+        }
+
+        uint256 newRewards = totalRewards - lastTotalRewards[_user];
+
+        // Calculate the user's share of the rewards
+        return (_userBalance * newRewards) / IERC20(address(veToken)).totalSupply();
+    }
+
     function updateMinLockPeriod(uint256 _minLockPeriod) external onlyOwner {
         minLockPeriod = _minLockPeriod;
     }
