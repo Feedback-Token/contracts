@@ -19,6 +19,6 @@ contract SubscriptionsScript is Utils {
         vm.startBroadcast(deployerPrivateKey);
         fbtContract =
         new FBTSubscriptions(getValue("protocolToken"), protocolFee, getValue("protocolAdmin"), getValue("rewardsPool"), 7 days);
-        updateDeployment(address(fbtContract), "fbtContract");
+        updateDeployment(address(fbtContract), "subscriptions");
     }
 }
